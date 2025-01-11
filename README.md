@@ -3,6 +3,8 @@ Linux CLI for backing up and recovering files
 
 # Install
 
+### One line
+
 ```
 curl https://vvvvvvvvvvv.com | sh
 ```
