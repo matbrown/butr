@@ -73,15 +73,19 @@ I recently invested in a subscription to AI. I thought I'd go head to head.
 
 ### Me (Human)
 
-3.5 hours 
+3.5 hours.
 
 ### Claude (AI)
 
-# Thoughts on AI 
+~ 30 seconds.
 
-AI is incredibly powerful and, with the right operator, is far more efficient and effective than us squeashy humans will ever be. 
+## Thoughts on AI 
 
-~ 30 seconds 
+AI is incredibly powerful and, with the right operator, is far more efficient and effective than us squeashy humans will ever be.
+
+**However**
+
+Software Engineers will *still* be needed, and AI will be a tool to our arsenal. 
 
 # Result? 
 
