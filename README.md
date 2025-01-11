@@ -9,14 +9,17 @@ curl https://vvvvvvvvvvv.com | sh
 
 # usage
 
+To backup a file:
 ```
 b [file]
 ```
 
+To recover a file:
 ```
 r [file]
 ```
 
+# Full
 ```
 butr - Backup and Recovery Tool
 
