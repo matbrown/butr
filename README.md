@@ -1,5 +1,5 @@
-# butr - BackUpToRecovery
-Linux CLI for backing up and recovering files. 
+# butr
+Linux CLI for backing up and recovering files. BUTR is short for backup to recovery.
 
 ## Installation
 
@@ -61,7 +61,7 @@ Notes:
 
 # Me (Human) vs Claude (AI)
 
-I'm an old school developer that's been coding for over 15 years now. I absolutely love coding with a passion, and I can't think of a better way of spending an evening than creating software, whether that's a Linux script to be used a CLI, refactoring something, backend, frontend, anything! Efficient tool? I'll make it more efficient. Already exists? Don't care, lemmedoitokiedokiefanks. 
+I'm an old school developer that's been coding for over 15 years now. I absolutely love coding with a passion, and I can't think of a better way of spending an evening than creating software, whether that's a cool Linux script to be used as a CLI, refactoring something, backend, frontend, anything! Efficient tool? I'll make it more efficient. Already exists? Don't care, lemmedoitokiedokiefanks. 
 
 It's a late saturday afternoon and I'm setting up and configuring a k8s cluster that will be responsible for a significant amount of services. My k8s cluster is running perfectly, but I need to make a significant tweak for the purpose of security. 
 
@@ -76,6 +76,10 @@ I recently invested in a subscription to AI. I thought I'd go head to head.
 3.5 hours 
 
 ### Claude (AI)
+
+# Thoughts on AI 
+
+AI is incredibly powerful and, with the right operator, is far more efficient and effective than us squeashy humans will ever be. 
 
 ~ 30 seconds 
 
