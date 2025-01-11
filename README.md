@@ -3,7 +3,7 @@ Linux CLI for backing up and recovering files.
 
 ## Installation
 
-### Script:
+The easiest and quickest way to install the tool is via the simple command:
 
 ```
 curl https://vvvvvvvvvvv.com | sh
