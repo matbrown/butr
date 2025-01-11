@@ -1,15 +1,15 @@
 # butr - BackUpToRecovery
 Linux CLI for backing up and recovering files. 
 
-# Installation
+## Installation
 
-## Script:
+### Script:
 
 ```
 curl https://vvvvvvvvvvv.com | sh
 ```
 
-# Basic Usage
+## Basic Usage
 
 ## Backup a file
 ```
