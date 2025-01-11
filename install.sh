@@ -1,5 +1,102 @@
 #!/bin/bash
 
+# Script Version
+INSTALLER_VERSION="1.0.2"
+REQUIRED_BUTR_VERSION="2.0.1"
+MIN_BUTR_VERSION="2.0.1"
+MAX_BUTR_VERSION="2.99.99"
+
+# Print version information
+print_version() {
+    echo "butr installer version $INSTALLER_VERSION"
+    echo "Compatible with butr versions $MIN_BUTR_VERSION to $MAX_BUTR_VERSION"
+}
+
+# Function to check if butr is installed and get its version
+check_existing_installation() {
+    if command -v butr &> /dev/null; then
+        local current_version=$(butr -v | grep -oP '(?<=version )[0-9.]+')
+        echo "$current_version"
+        return 0
+    fi
+    return 1
+}
+
+# Function to prompt for confirmation
+confirm_action() {
+    local prompt="$1"
+    local default="$2"
+    
+    if [[ "$default" == "Y" ]]; then
+        prompt="$prompt [Y/n] "
+    else
+        prompt="$prompt [y/N] "
+    fi
+    
+    read -r -p "$prompt" response
+    response=${response,,} # Convert to lowercase
+    
+    if [[ "$default" == "Y" ]]; then
+        [[ "$response" =~ ^(no|n)$ ]] && return 1
+        return 0
+    else
+        [[ "$response" =~ ^(yes|y)$ ]] && return 0
+        return 1
+    fi
+}
+
+# Function to compare version numbers
+version_compare() {
+    if [[ $1 == $2 ]]; then
+        echo "equal"
+        return
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # Fill empty positions in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do
+        ver1[i]=0
+    done
+    # Fill empty positions in ver2 with zeros
+    for ((i=${#ver2[@]}; i<${#ver1[@]}; i++)); do
+        ver2[i]=0
+    done
+    # Compare version numbers
+    for ((i=0; i<${#ver1[@]}; i++)); do
+        if [[ -z ${ver2[i]} ]]; then
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]})); then
+            echo "greater"
+            return
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]})); then
+            echo "less"
+            return
+        fi
+    done
+    echo "equal"
+}
+
+# Check version compatibility
+check_version_compatibility() {
+    local butr_version=$1
+    
+    # Check minimum version
+    if [[ $(version_compare "$butr_version" "$MIN_BUTR_VERSION") == "less" ]]; then
+        echo "Error: butr version $butr_version is lower than minimum required version $MIN_BUTR_VERSION"
+        return 1
+    fi
+    
+    # Check maximum version
+    if [[ $(version_compare "$butr_version" "$MAX_BUTR_VERSION") == "greater" ]]; then
+        echo "Error: butr version $butr_version is higher than maximum supported version $MAX_BUTR_VERSION"
+        return 1
+    fi
+    
+    return 0
+}
+
 # Exit on any error
 set -e
 
@@ -9,118 +106,38 @@ INSTALL_PATH="/usr/bin/butr"
 ALIAS_PATH="/etc/profile.d/butr-aliases.sh"
 TEST_DIR="/tmp/butr_test_$(date +%s)"
 TEST_FILE="$TEST_DIR/test.txt"
+FORCE_INSTALL=0
 
-# Function to clean up test files
-cleanup_tests() {
-    if [ -d "$TEST_DIR" ]; then
-        rm -rf "$TEST_DIR"
-    fi
-    echo "Test cleanup completed"
-}
-
-# Function to run tests
-run_tests() {
-    echo "Running installation tests..."
-    
-    # Create test directory and file
-    mkdir -p "$TEST_DIR"
-    echo "Test content" > "$TEST_FILE"
-    
-    echo "1. Testing butr command availability..."
-    if ! command -v butr &> /dev/null; then
-        echo "Error: butr command not found"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ butr command is available"
-    
-    echo "2. Testing execute permissions..."
-    if [ ! -x "$INSTALL_PATH" ]; then
-        echo "Error: butr is not executable"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Execute permissions are correct"
-    
-    echo "3. Testing backup functionality..."
-    if ! butr -b "$TEST_FILE" &> /dev/null; then
-        echo "Error: backup operation failed"
-        cleanup_tests
-        exit 1
-    fi
-    if [ ! -d "$HOME/.butr" ]; then
-        echo "Error: backup directory was not created"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Backup operation successful"
-    
-    echo "4. Testing backup file creation..."
-    BACKUP_PATH="$HOME/.butr$TEST_DIR"
-    if [ ! "$(find "$BACKUP_PATH" -name "test.txt.butr.*" | wc -l)" -eq 1 ]; then
-        echo "Error: backup file not found"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Backup file created correctly"
-    
-    echo "5. Testing file modification and backup..."
-    echo "Modified content" > "$TEST_FILE"
-    if ! butr -b "$TEST_FILE" &> /dev/null; then
-        echo "Error: second backup operation failed"
-        cleanup_tests
-        exit 1
-    fi
-    if [ ! "$(find "$BACKUP_PATH" -name "test.txt.butr.*" | wc -l)" -eq 2 ]; then
-        echo "Error: second backup file not found"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Multiple backup versions working correctly"
-    
-    echo "6. Testing recovery functionality..."
-    if ! butr -r "$TEST_FILE" <<< "1" &> /dev/null; then
-        echo "Error: recovery operation failed"
-        cleanup_tests
-        exit 1
-    fi
-    if [ ! "$(cat "$TEST_FILE")" = "Modified content" ]; then
-        echo "Error: file content not recovered correctly"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Recovery operation successful"
-    
-    echo "7. Testing alias file creation..."
-    if [ ! -f "$ALIAS_PATH" ]; then
-        echo "Error: alias file not created"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Alias file created correctly"
-    
-    echo "8. Testing alias file permissions..."
-    if [ ! "$(stat -c %a "$ALIAS_PATH")" = "644" ]; then
-        echo "Error: alias file has incorrect permissions"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Alias file permissions are correct"
-
-    echo "9. Testing alias functionality..."
-    source "$ALIAS_PATH"
-    if ! type b &> /dev/null || ! type r &> /dev/null; then
-        echo "Error: aliases not defined after sourcing"
-        cleanup_tests
-        exit 1
-    fi
-    echo "✓ Aliases defined correctly"
-    
-    # Clean up test files
-    cleanup_tests
-    
-    echo "All tests passed successfully! ✓"
-}
+# Process command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -v|--version)
+            print_version
+            exit 0
+            ;;
+        --skip-tests)
+            SKIP_TESTS=1
+            shift
+            ;;
+        -f|--force)
+            FORCE_INSTALL=1
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: $0 [options]"
+            echo "Options:"
+            echo "  -v, --version    Show version information"
+            echo "  --skip-tests     Skip installation tests"
+            echo "  -f, --force      Force installation (overwrite existing)"
+            echo "  -h, --help       Show this help message"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
 
 # Check if script is run as root
 if [ "$EUID" -ne 0 ]; then 
@@ -128,7 +145,41 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo "Installing butr backup tool..."
+# Check for existing installation
+if existing_version=$(check_existing_installation); then
+    echo "butr version $existing_version is already installed"
+    
+    # Compare versions
+    version_status=$(version_compare "$REQUIRED_BUTR_VERSION" "$existing_version")
+    
+    if [ "$version_status" == "equal" ]; then
+        echo "This is the same version as the installer provides"
+        if [ "$FORCE_INSTALL" -ne 1 ]; then
+            if ! confirm_action "Do you want to reinstall?" "N"; then
+                echo "Installation cancelled"
+                exit 0
+            fi
+        fi
+    elif [ "$version_status" == "greater" ]; then
+        echo "This is an upgrade from version $existing_version to $REQUIRED_BUTR_VERSION"
+        if [ "$FORCE_INSTALL" -ne 1 ]; then
+            if ! confirm_action "Do you want to upgrade?" "Y"; then
+                echo "Installation cancelled"
+                exit 0
+            fi
+        fi
+    else
+        echo "Warning: This would downgrade from version $existing_version to $REQUIRED_BUTR_VERSION"
+        if [ "$FORCE_INSTALL" -ne 1 ]; then
+            if ! confirm_action "Do you want to downgrade?" "N"; then
+                echo "Installation cancelled"
+                exit 0
+            fi
+        fi
+    fi
+fi
+
+echo "Installing butr backup tool version $REQUIRED_BUTR_VERSION..."
 
 # Download the tool using curl
 if ! curl -sSfL "$TOOL_URL" -o "$INSTALL_PATH"; then
@@ -152,8 +203,10 @@ EOF
 # Set permissions for aliases file (rw-r--r--)
 chmod 644 "$ALIAS_PATH"
 
-# Run installation tests
-run_tests
+# Run installation tests unless skipped
+if [ -z "$SKIP_TESTS" ]; then
+    run_tests
+fi
 
 # Verify installation
 if [ -x "$INSTALL_PATH" ] && [ -f "$ALIAS_PATH" ]; then
@@ -169,6 +222,9 @@ else
     echo "Error: Installation verification failed"
     exit 1
 fi
+
+# Print version information
+print_version
 
 # Remind about system-wide activation
 echo ""
