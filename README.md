@@ -57,21 +57,22 @@ Notes:
     - Only creates new backups when file content has changed
     - Automatically backs up current file before recovery
     - Recovery shows all available backups with versions and lets you choose
-END_HELP
-}
-
 ```
 
-# Human vs AI
+# Me (Human) vs Claude (AI)
 
 I'm an old school developer that's been coding for over 15 years now. I absolutely love coding with a passion, and I can't think of a better way of spending an evening than creating software, whether that's a Linux script to be used a CLI, refactoring something, backend, frontend, anything! Efficient tool? I'll make it more efficient. Already exists? Don't care, lemmedoitokiedokiefanks. 
 
-It's a late saturday afternoon and I'm setting up and configuring a k8s cluster that will be responsible for a significant amount of services. My k8s cluster is running perfectly, but I need to make a significant tweak for the purpose of security.
+It's a late saturday afternoon and I'm setting up and configuring a k8s cluster that will be responsible for a significant amount of services. My k8s cluster is running perfectly, but I need to make a significant tweak for the purpose of security. 
 
-I'm making various changes to the relative yaml files, and it's obvious I need a tool to backup and recover these files.
+I'm making various changes to the relative yaml files. Worried  and it's obvious I need a tool to backup and recover these files.
 
 I need a tool. I need a tool that can backup and recover files. Meh, a tool already exists, but I don't care, I'm just excited I get to code something awesome. 
 
-I started my career using Perl. I've got a number of languages under my belt, but I absolutely love Perl. So I'm excited.
+### Me (Human)
 
-I spent 8~ hours creating an awesome utility to backup and recover files. 
+3.5 hours 
+
+### Claude (AI)
+
+~ 30 seconds 
