@@ -1,9 +1,9 @@
 # butr
 Linux CLI for backing up and recovering files. **B**ac**u**p**t**o**r**ecovery*.
 
-# Install
+# Installation
 
-### One line
+## Script:
 
 ```
 curl https://vvvvvvvvvvv.com | sh
