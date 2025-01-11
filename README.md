@@ -9,7 +9,7 @@ curl https://vvvvvvvvvvv.com | sh
 
 # Basic Usage
 
-To backup a file:
+## Backup a file
 ```
 b [file]
 ```
@@ -18,7 +18,7 @@ OR:
 butr -b [file]
 ```
 
-To recover a file:
+## Recover a file
 ```
 r [file]
 ```
