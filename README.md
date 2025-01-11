@@ -1,25 +1,33 @@
 # butr
 Linux CLI for backing up and recovering files
 
-# install
+# Install
 
 ```
 curl https://vvvvvvvvvvv.com | sh
 ```
 
-# usage
+# Basic Usage
 
 To backup a file:
 ```
 b [file]
+```
+OR:
+```
+butr -b [file]
 ```
 
 To recover a file:
 ```
 r [file]
 ```
+OR
+```
+butr -r [file]
+```
 
-# Full
+# Usage
 ```
 butr - Backup and Recovery Tool
 
@@ -62,10 +70,6 @@ I'm making various changes to the relative yaml files, and it's obvious I need a
 
 I need a tool. I need a tool that can backup and recover files. Meh, a tool already exists, but I don't care, I'm just excited I get to code something awesome. 
 
-I started my career using Perl. I've got a number of languages under my belt, but I absolutely love Perl. I'm excited.
+I started my career using Perl. I've got a number of languages under my belt, but I absolutely love Perl. So I'm excited.
 
-
-
-I spent 8~ hours creating an awesome utility to backup and res
-
-As I'm an old school developer, and I got really excited as I get script something. I absolutely love scripting and creating Linux CLIs in Perl with a deep passion, it's so much fun. 
+I spent 8~ hours creating an awesome utility to backup and recover files. 
