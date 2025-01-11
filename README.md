@@ -11,7 +11,7 @@ curl https://raw.githubusercontent.com/matbrown/butr/refs/heads/main/install.sh 
 
 ## Basic Usage
 
-## Backup a file
+### Backup a file
 ```
 b [file]
 ```
@@ -20,7 +20,7 @@ OR:
 butr -b [file]
 ```
 
-## Recover a file
+### Recover a file
 ```
 r [file]
 ```
