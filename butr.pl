@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-
 use strict;
 use warnings;
 use File::Copy;
@@ -9,7 +8,7 @@ use Cwd 'abs_path';
 use Digest::MD5;
 
 # Version
-our $VERSION = "1.0.4";
+our $VERSION = "1.0.5";
 
 # Command line options
 my $help = 0;
@@ -182,12 +181,10 @@ sub recover_file {
 
     my $selected_backup = $backups[$choice - 1];
 
-    # Check if target file exists
+    # If current file exists, create a backup before recovery
     if (-f $source) {
-        print "Warning: Target file '$source' already exists. Overwrite? (y/N) ";
-        my $answer = <STDIN>;
-        chomp($answer);
-        exit 0 unless lc($answer) eq 'y';
+        print "Creating backup of current file before recovery...\n";
+        backup_file($source);
     }
 
     # Perform recovery
@@ -221,7 +218,7 @@ Options:
 
 Example:
     butr -b document.txt    # Creates .document.txt.butr.v1.20250111_143022
-    butr -r document.txt    # Recovers from the selected backup version
+    butr -r document.txt    # Creates backup of current file, then recovers selected version
 
 Notes:
     - Backups are stored in the same directory as the source file
@@ -229,6 +226,7 @@ Notes:
     - Backup files use the format: .filename.butr.vN.YYYYMMDD_HHMMSS
       where N is an incrementing version number
     - Only creates new backups when file content has changed
+    - Automatically backs up current file before recovery
     - Recovery shows all available backups with versions and lets you choose
 END_HELP
 }
