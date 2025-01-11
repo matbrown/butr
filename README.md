@@ -1,6 +1,22 @@
 # butr
 Linux CLI for backing up and recovering files
 
+# install
+
+```
+curl https://vvvvvvvvvvv.com | sh
+```
+
+# usage
+
+```
+b [file]
+```
+
+```
+r [file]
+```
+
 ```
 butr - Backup and Recovery Tool
 
@@ -33,15 +49,13 @@ END_HELP
 
 ```
 
-# Human vs AI 😢
+# Human vs AI
 
-I'm an old school developer that's been coding for over 15 years now. I absolutely love coding with a passion, and I can't think of a better way of spending an evening than creating software, whether that's a Linux script to be used a CLI, refactoring something, backend, frontend, anything! Efficient tool? I'll make it more efficient. Already exists? Don't care, lemmedoitokayfanks. 
+I'm an old school developer that's been coding for over 15 years now. I absolutely love coding with a passion, and I can't think of a better way of spending an evening than creating software, whether that's a Linux script to be used a CLI, refactoring something, backend, frontend, anything! Efficient tool? I'll make it more efficient. Already exists? Don't care, lemmedoitokiedokiefanks. 
 
-It's a late saturday afternoon and I'm setting up and configuring a k8s cluster that will be responsible for a significant amount of services. My k8s cluster is running perfectly, but I need to make a small tweak to a component for the purpose of security. 
+It's a late saturday afternoon and I'm setting up and configuring a k8s cluster that will be responsible for a significant amount of services. My k8s cluster is running perfectly, but I need to make a significant tweak for the purpose of security.
 
-I'm making various changes to the components via the yaml files to get it all perfect. 
-
-As I'm making changes to these files, it's clear I need to backup the files to make sure I don't screw things up and can revert back if (I really mean when) I do.
+I'm making various changes to the relative yaml files, and it's obvious I need a tool to backup and recover these files.
 
 I need a tool. I need a tool that can backup and recover files. Meh, a tool already exists, but I don't care, I'm just excited I get to code something awesome. 
 
