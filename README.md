@@ -69,6 +69,8 @@ I'm making various changes to the relative yaml files. Worried  and it's obvious
 
 I need a tool. I need a tool that can backup and recover files. Meh, a tool already exists, but I don't care, I'm just excited I get to code something awesome. 
 
+I recently invested in a subscription to AI. I thought I'd go head to head. 
+
 ### Me (Human)
 
 3.5 hours 
@@ -76,3 +78,7 @@ I need a tool. I need a tool that can backup and recover files. Meh, a tool alre
 ### Claude (AI)
 
 ~ 30 seconds 
+
+# Result? 
+
+Claude wins. 
