@@ -6,7 +6,7 @@ Linux CLI for backing up and recovering files.
 The easiest and quickest way to install the tool is via the simple command:
 
 ```
-curl https://vvvvvvvvvvv.com | sh
+curl https://raw.githubusercontent.com/matbrown/butr/refs/heads/main/install.sh | sh
 ```
 
 ## Basic Usage
