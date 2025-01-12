@@ -193,6 +193,25 @@ cleanup_tests() {
     echo "Test cleanup completed"
 }
 
+# Check version compatibility
+check_version_compatibility() {
+    local butr_version=$1
+    
+    # Check minimum version
+    if [[ $(version_compare "$butr_version" "$MIN_BUTR_VERSION") == "less" ]]; then
+        echo "Error: butr version $butr_version is lower than minimum required version $MIN_BUTR_VERSION"
+        return 1
+    fi
+    
+    # Check maximum version
+    if [[ $(version_compare "$butr_version" "$MAX_BUTR_VERSION") == "greater" ]]; then
+        echo "Error: butr version $butr_version is higher than maximum supported version $MAX_BUTR_VERSION"
+        return 1
+    fi
+    
+    return 0
+}
+
 # Function to run tests
 run_tests() {
     echo "Running installation tests..."
