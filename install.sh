@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Script Version
-INSTALLER_VERSION="1.0.0"
-REQUIRED_BUTR_VERSION="1.0.0"
-MIN_BUTR_VERSION="1.0.0"
-MAX_BUTR_VERSION="1.99.99"
+INSTALLER_VERSION="1.0.6"
+REQUIRED_BUTR_VERSION="2.0.1"
+MIN_BUTR_VERSION="2.0.0"
+MAX_BUTR_VERSION="2.99.99"
 
 # Define variables
-TOOL_URL="https://mbr.tools.co.uk/butr"
+TOOL_URL="https://raw.githubusercontent.com/matbrown/butr/refs/heads/main/butr.pl"
 INSTALL_PATH="/usr/bin/butr"
 ALIAS_PATH="/etc/profile.d/butr-aliases.sh"
 TEST_DIR="/tmp/butr_test_$(date +%s)"
