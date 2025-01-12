@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Script Version
-INSTALLER_VERSION="1.0.6"
-REQUIRED_BUTR_VERSION="2.0.1"
+INSTALLER_VERSION="2.0.2"
+REQUIRED_BUTR_VERSION="1.0.0"
 MIN_BUTR_VERSION="2.0.0"
 MAX_BUTR_VERSION="2.99.99"
 
@@ -14,6 +14,10 @@ TEST_DIR="/tmp/butr_test_$(date +%s)"
 TEST_FILE="$TEST_DIR/test.txt"
 FORCE_INSTALL=0
 SKIP_TESTS=0
+
+# Store the original user who ran sudo
+ORIGINAL_USER=${SUDO_USER:-$USER}
+ORIGINAL_HOME=$(getent passwd "$ORIGINAL_USER" | cut -d: -f6)
 
 # Function to check if a command exists
 check_command_exists() {
@@ -89,6 +93,25 @@ confirm_action() {
     fi
 }
 
+# Check version compatibility
+check_version_compatibility() {
+    local butr_version=$1
+    
+    # Check minimum version
+    if [[ $(version_compare "$butr_version" "$MIN_BUTR_VERSION") == "less" ]]; then
+        echo "Error: butr version $butr_version is lower than minimum required version $MIN_BUTR_VERSION"
+        return 1
+    fi
+    
+    # Check maximum version
+    if [[ $(version_compare "$butr_version" "$MAX_BUTR_VERSION") == "greater" ]]; then
+        echo "Error: butr version $butr_version is higher than maximum supported version $MAX_BUTR_VERSION"
+        return 1
+    fi
+    
+    return 0
+}
+
 # Function to compare version numbers
 version_compare() {
     if [[ $1 == $2 ]]; then
@@ -122,7 +145,20 @@ version_compare() {
     echo "equal"
 }
 
-# Function to setup aliases with safety checks
+# Function to apply aliases for a specific shell
+apply_aliases_for_shell() {
+    local shell_rc="$1"
+    local user="$2"
+    
+    if [ -f "$shell_rc" ]; then
+        # Check if the source line already exists
+        if ! grep -q "^source.*$ALIAS_PATH" "$shell_rc"; then
+            echo "source $ALIAS_PATH" >> "$shell_rc"
+        fi
+    fi
+}
+
+# Function to setup aliases with safety checks and immediate application
 setup_aliases() {
     local alias_file="$ALIAS_PATH"
     local created_aliases=()
@@ -172,6 +208,19 @@ setup_aliases() {
     # Set permissions
     chmod 644 "$alias_file"
     
+    # Apply aliases to common shell configuration files for the original user
+    if [ -n "$ORIGINAL_USER" ] && [ "$ORIGINAL_USER" != "root" ]; then
+        local user_home="$ORIGINAL_HOME"
+        # Apply to bash configuration
+        apply_aliases_for_shell "$user_home/.bashrc" "$ORIGINAL_USER"
+        # Apply to zsh configuration if it exists
+        apply_aliases_for_shell "$user_home/.zshrc" "$ORIGINAL_USER"
+        
+        # Source the alias file immediately for the current session
+        # We need to use sudo -u to run this as the original user
+        sudo -u "$ORIGINAL_USER" bash -c "source $ALIAS_PATH"
+    fi
+    
     # Report results
     if [ ${#created_aliases[@]} -gt 0 ]; then
         echo "Created aliases:"
@@ -191,25 +240,6 @@ cleanup_tests() {
         rm -rf "$TEST_DIR"
     fi
     echo "Test cleanup completed"
-}
-
-# Check version compatibility
-check_version_compatibility() {
-    local butr_version=$1
-    
-    # Check minimum version
-    if [[ $(version_compare "$butr_version" "$MIN_BUTR_VERSION") == "less" ]]; then
-        echo "Error: butr version $butr_version is lower than minimum required version $MIN_BUTR_VERSION"
-        return 1
-    fi
-    
-    # Check maximum version
-    if [[ $(version_compare "$butr_version" "$MAX_BUTR_VERSION") == "greater" ]]; then
-        echo "Error: butr version $butr_version is higher than maximum supported version $MAX_BUTR_VERSION"
-        return 1
-    fi
-    
-    return 0
 }
 
 # Function to run tests
@@ -370,7 +400,9 @@ fi
 # Print version information
 print_version
 
-# Remind about system-wide activation
+# Updated completion message
 echo ""
-echo "Note: Users will need to log out and back in for aliases to take effect"
-echo "      or source $ALIAS_PATH manually"
+echo "Installation complete! Aliases have been set up and applied to the current session."
+echo "The following commands are now available (if no conflicts were found):"
+echo "  b  - shortcut for 'butr -b'"
+echo "  r  - shortcut for 'butr -r'"
