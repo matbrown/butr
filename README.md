@@ -6,7 +6,7 @@ Linux CLI for backing up and recovering files. BUTR is short for backup to recov
 The easiest and quickest way to install the tool is via the simple command:
 
 ```
-curl https://raw.githubusercontent.com/matbrown/butr/refs/heads/main/install.sh | sh
+curl https://raw.githubusercontent.com/matbrown/butr/refs/heads/main/install.sh | bash
 ```
 
 ## Basic Usage
