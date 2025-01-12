@@ -101,7 +101,7 @@ check_version_compatibility() {
 set -e
 
 # Define variables
-TOOL_URL="https://mbr.tools.co.uk/butr"
+TOOL_URL="https://raw.githubusercontent.com/matbrown/butr/refs/heads/main/butr.pl"
 INSTALL_PATH="/usr/bin/butr"
 ALIAS_PATH="/etc/profile.d/butr-aliases.sh"
 TEST_DIR="/tmp/butr_test_$(date +%s)"
